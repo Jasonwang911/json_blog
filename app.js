@@ -11,22 +11,11 @@ var bodyParser = require('body-parser');
 var logger = require('morgan');
 
 
-var User = {
-  userid: 2,
-  name: '浪魁',
-  password: '123',
-}
-
-
-// var indexRouter = require('./routes/index');
-// var usersRouter = require('./routes/users');
+var indexRouter = require('./routes/index');
+var adminRouter = require('./routes/admin');
 
 var app = express();
-console.log(config.secret)
 
-
-// 设置superSecret全局参数
-app.set('superSecret', config.secret);
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', require('ejs').__express);
@@ -40,50 +29,9 @@ app.use(cookieParser());
 // app.use(multerObj.any());
 app.use(express.static(path.join(__dirname, 'public')));
 
-console.log(config.secret)
-// 生成 token
-const token = jwt.sign(User, config.secret, {
-  expiresIn:  60*60*24 //秒到期时间
-});
+app.use('/', indexRouter);
+app.use('/admin', adminRouter);
 
-// 验证token的合法性
-app.use(expressJwt ({
-  secret:  config.secret 
-}).unless({
-  path: ['/login', '/getUserInfo']  //除了这些地址，其他的URL都需要验证
-}));
-
-// // 拦截器
-app.use(function(err, req, res, next) {
-  // 当token验证失败时会抛出如下错误
-  if(err.name === 'UnauthorizedError') {
-    // 返回401
-    res.status(401).json({code: 1, message: '无效的token'})
-  }
-})
-
-// 获取token的接口
-app.post('/getUserInfo', function(req, res) {
-  res.json({
-    code: 0,
-    message: 'token获取成功',
-    token: token
-  })
-})
-
-app.post('/newList', function(req, res) {
-  console.log(req.headers.authorization.split(' ')[1])
-  console.log(req.user)
-  res.json({
-    code: 0,
-    message: '请求成功',
-    userInfo: req.user
-  })
-})
-
-
-// app.use('/', indexRouter);
-// app.use('/users', usersRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

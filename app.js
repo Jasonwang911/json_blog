@@ -1,10 +1,11 @@
 var createError = require('http-errors');
 var express = require('express');
-var config = require('./config/index');
+var cors = require('cors');
+// var config = require('./config/index');
 var path = require('path');
 // JWT 相关npm包
-var jwt = require('jsonwebtoken');
-var expressJwt = require('express-jwt');
+// var jwt = require('jsonwebtoken');
+// var expressJwt = require('express-jwt');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 // 日志
@@ -16,10 +17,17 @@ var adminRouter = require('./routes/admin');
 
 var app = express();
 
+var corsOptions = {
+  origin: ['http://localhost:8080', 'http://www.baidu.com'],
+  // origin: 'http://localhost:8080', //只有 localhost:8080可以访问
+  credentials: true
+}
+
+app.use(cors(corsOptions));
+
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
-app.set('view engine', require('ejs').__express);
-app.set('view engine', 'html')
+app.set('view engine', 'ejs');
 
 app.use(logger('dev'));
 app.use(bodyParser.json());

@@ -1,11 +1,22 @@
 var express = require('express');
 var router = express.Router();
+// cookie 和 session
+var cookieParser = require('cookie-parser');
+var session = require('express-session');
 // 配置文件
 var config = require('./../config/index');
 // JWT 相关npm包
 var jwt = require('jsonwebtoken');
 var expressJwt = require('express-jwt');
-const mysql = require('mysql');
+var mysql = require('mysql');
+// 图形验证码
+var svgCaptcha = require('svg-captcha');
+
+
+//这里传入了一个密钥加session id
+router.use(cookieParser('Jason'));
+//使用就靠这个中间件
+router.use(session({ secret: 'Jason', proxy: true, resave: false, saveUninitialized: false}));
 
 // 后台数据库连接池
 const db = mysql.createPool(config.database.admin);
@@ -27,7 +38,7 @@ const token = jwt.sign( {userid: json.userid,name: json.username }, config.secre
 router.use(expressJwt ({
   secret:  config.secret 
 }).unless({
-  path: ['/admin/login', '/admin/getToken', '/admin/index']  //除了这些地址，其他的URL都需要验证
+  path: ['/admin/login', '/admin/getToken', '/admin/index', '/admin/captcha']  //除了这些地址，其他的URL都需要验证
 }));
 
 // // 拦截器
@@ -67,9 +78,37 @@ router.post('/userInfo', function(req, res) {
   })
 })
 
+
+/*
+*   图片验证码接口
+*
+*/
+router.get('/captcha', function(req, res) {
+  const cap = svgCaptcha.create({
+    size: 4, // 验证码长度
+    ignoreChars: '0o1i', // 验证码字符中排除 0o1i
+    noise: 2,
+    color: false ,
+    // background: 'skyblue'
+  });
+  req.session.CAPTCHA_KEY = cap.text.toLowerCase();
+  res.type('svg');
+  res.send(cap.data);
+})
+
 /* GET users listing. */
-router.get('/', function(req, res, next) {
-  res.send('respond with a resource');
+router.post('/index', function(req, res) {
+  if(req.body.cap == req.session.CAPTCHA_KEY) {
+    res.json({
+      code: 0,
+      message: '图形验证码正确，欢迎来到Jason博客后台管理！'
+    });
+  }else {
+    res.json({
+      code: 0,
+      message: '图形验证码错误，请重新输入'
+    });
+  }
 });
 
 module.exports = router;

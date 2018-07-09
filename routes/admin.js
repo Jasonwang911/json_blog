@@ -80,20 +80,31 @@ router.post('/userInfo', function(req, res) {
 
 
 /*
-*   图片验证码接口
+*   图片验证码接口   
 *
 */
 router.get('/captcha', function(req, res) {
   const cap = svgCaptcha.create({
     size: 4, // 验证码长度
     ignoreChars: '0o1i', // 验证码字符中排除 0o1i
-    noise: 2,
-    color: false ,
+    noise: 2,    // 干扰线数量
+    color: false ,   // 是否设置背景色
     // background: 'skyblue'
   });
   req.session.CAPTCHA_KEY = cap.text.toLowerCase();
   res.type('svg');
   res.send(cap.data);
+})
+
+/*
+*   后台管理登录接口
+* 
+*/
+router.post('login', function( req, res) {
+    res.json({
+      code: 0,
+      message: '登录成功'
+    })
 })
 
 /* GET users listing. */

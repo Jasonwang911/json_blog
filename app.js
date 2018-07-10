@@ -18,7 +18,7 @@ var adminRouter = require('./routes/admin');
 var app = express();
 
 var corsOptions = {
-  origin: ['http://localhost:8080', 'http://www.baidu.com'],
+  origin: ['http://localhost:8080', 'http://localhost:9527'],
   // origin: 'http://localhost:8080', //只有 localhost:8080可以访问
   credentials: true
 }

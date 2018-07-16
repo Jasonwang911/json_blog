@@ -137,6 +137,60 @@ router.post('/login', function( req, res) {
     }
 })
 
+
+/*
+*   后台管理 文章发布接口
+*   @params  
+*   title      文章标题
+*   author     文章作者
+*   content    文章内容
+*/
+router.post('/articlePublish', function( req, res) {
+  const {
+    title,
+    author,
+    content
+  } = req.body;
+  if(!title) {
+    res.json({
+      code: 1,
+      message: '标题不能为空！'
+    })
+  }else if(!author) {
+    res.json({
+      code: 1,
+      message: '作者不能为空！'
+    })
+  }else if (!content) {
+    res.json({
+      code: 1,
+      message: '文章内容不能为空！'
+    })
+  }else {
+    db.query(`INSERT INTO t_sys_article (title, author, content, create_date) VALUES ('${title}', '${author}', '${content}', NOW())`, function(err) {
+      if(err) {
+        console.log(err);
+        res.json({
+          code: 1,
+          message: '服务器繁忙，请稍后再试！'
+        })
+      }else {
+        res.json({
+          code: 0,
+          message: '入库成功！'
+        })
+      }
+    })
+  }
+})
+
+/*
+*   后台管理 查询文章列表接口
+*   @params  
+*   title      文章标题
+*   author     文章作者
+*/
+
 /* GET users listing. */
 router.post('/index', function(req, res) {
   console.log(req.cookies)

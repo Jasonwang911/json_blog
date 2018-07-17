@@ -16,6 +16,7 @@ var uuid = require('node-uuid');
 // 文件上传中间件
 var formidable = require('formidable');
 var fs = require("fs");
+const path = require('path');
 
 
 //这里传入了一个密钥加session id
@@ -243,8 +244,8 @@ router.post('/walnut/imgUpload', function(req, res) {
     console.log('1==>', fields);
     console.log('2==>', files.file.name)
     const name = files.file.name;
-    const path = files.file.path;
-    console.log(name, path)
+    const imgPath = path.basename(files.file.path);
+    console.log(name, imgPath)
     // const title = fields.title;
     // const singer = fields.singer;
     // const music = path.basename(files.music.path);

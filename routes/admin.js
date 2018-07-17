@@ -31,7 +31,7 @@ const db = mysql.createPool(config.database.admin);
 router.use(expressJwt ({
   secret:  config.secret_token.admin 
 }).unless({
-  path: ['/admin/login', '/admin/getToken', '/admin/index', '/admin/captcha', '/admin/walnut/imgUpload']  //除了这些地址，其他的URL都需要验证
+  path: ['/admin/login', '/admin/getToken', '/admin/index', '/admin/captcha']  //除了这些地址，其他的URL都需要验证
 }));
 
 // 拦截器

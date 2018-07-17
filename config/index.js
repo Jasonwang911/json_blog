@@ -32,6 +32,9 @@ module.exports = {
             database: 'jason_blog'
         },
         font: ''
+    },
+    uploadDir: {
+        admin: './public/images/admin'
     }
 }
 

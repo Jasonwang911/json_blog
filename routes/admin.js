@@ -11,6 +11,11 @@ var expressJwt = require('express-jwt');
 var mysql = require('mysql');
 // 图形验证码
 var svgCaptcha = require('svg-captcha');
+// uuid
+var uuid = require('node-uuid');
+// 文件上传中间件
+var formidable = require('formidable');
+var fs = require("fs");
 
 
 //这里传入了一个密钥加session id
@@ -26,7 +31,7 @@ const db = mysql.createPool(config.database.admin);
 router.use(expressJwt ({
   secret:  config.secret_token.admin 
 }).unless({
-  path: ['/admin/login', '/admin/getToken', '/admin/index', '/admin/captcha']  //除了这些地址，其他的URL都需要验证
+  path: ['/admin/login', '/admin/getToken', '/admin/index', '/admin/captcha', '/admin/walnut/imgUpload']  //除了这些地址，其他的URL都需要验证
 }));
 
 // 拦截器
@@ -146,7 +151,7 @@ router.post('/login', function( req, res) {
 *   content    文章内容
 */
 router.post('/articlePublish', function( req, res) {
-  const {
+  let {
     title,
     author,
     content
@@ -167,7 +172,8 @@ router.post('/articlePublish', function( req, res) {
       message: '文章内容不能为空！'
     })
   }else {
-    db.query(`INSERT INTO t_sys_article (title, author, content, create_date) VALUES ('${title}', '${author}', '${content}', NOW())`, function(err) {
+    const artUUID = uuid.v1();
+    db.query(`INSERT INTO t_sys_articlelist (artlist_uuid, artlist_title, artlist_author) VALUES ('${artUUID}','${title}', '${author}')`, function(err) {
       if(err) {
         console.log(err);
         res.json({
@@ -175,9 +181,19 @@ router.post('/articlePublish', function( req, res) {
           message: '服务器繁忙，请稍后再试！'
         })
       }else {
-        res.json({
-          code: 0,
-          message: '入库成功！'
+        db.query(`INSERT INTO t_sys_articles ( artlist_uuid, articles_content, articles_create_time, articles_update_time) VALUES ('${artUUID}', '${content}', NOW(), NOW())`, function(err) {
+          if(err) {
+            console.log(err);
+            res.json({
+              code: 1,
+              message: '服务器繁忙，请稍后再试！'
+            })
+          }else {
+            res.json({
+              code: 0,
+              message: '入库成功！'
+            })
+          }
         })
       }
     })
@@ -190,6 +206,56 @@ router.post('/articlePublish', function( req, res) {
 *   title      文章标题
 *   author     文章作者
 */
+router.post('/articleList', function(req, res) {
+  db.query(`SELECT * FROM t_sys_articlelist`, function(err, data) {
+    if(err) {
+      console.log(err);
+      res.json({
+        code: 1,
+        message: '服务器繁忙，请稍后再试！'
+      })
+    }else {
+      res.json({
+        code: 0,
+        message: '查询成功！',
+        data: data
+      })
+    }
+  })
+})
+
+/*
+*   后台管理图片上传功能
+* 
+*/
+router.post('/walnut/imgUpload', function(req, res) {
+  const form = new formidable.IncomingForm();
+  // 上传文件的保存路径
+  form.uploadDir = config.uploadDir.admin;
+  // 是否保存扩展名
+  form.keepExtensions = true;
+  // 上传文件的最大大小
+  form.maxFileSize = 20 * 1024 * 1024;
+  form.parse(req, function(err, fields, files){
+    if(err) {
+      throw err;
+    }
+    console.log('1==>', fields);
+    console.log('2==>', files.file.name)
+    const name = files.file.name;
+    const path = files.file.path;
+    console.log(name, path)
+    // const title = fields.title;
+    // const singer = fields.singer;
+    // const music = path.basename(files.music.path);
+    // const img = path.basename(files.img.path);
+    // db.path(`INSERT INTO t_sys_walnuts (title, singer, music, img) VALUES ()`)
+    res.json({
+      code: 0,
+      message: '上传成功'
+    })
+  })
+})
 
 /* GET users listing. */
 router.post('/index', function(req, res) {

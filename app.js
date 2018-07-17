@@ -14,7 +14,7 @@ var bodyParser = require('body-parser');
 var logger = require('morgan');
 
 
-var indexRouter = require('./routes/index');
+var indexRouter = require('./routes/font');
 var adminRouter = require('./routes/admin');
 var wangEditor = require('./routes/wangEditor')
 
@@ -70,7 +70,7 @@ app.use("/ueditor/ue", ueditor(path.join(__dirname, 'public'), function (req, re
   }
 }));
 
-app.use('/', indexRouter);
+app.use('/font', indexRouter);
 app.use('/admin', adminRouter);
 app.use("/wangUeditor", wangEditor);
 

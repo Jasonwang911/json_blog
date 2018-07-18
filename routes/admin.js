@@ -226,8 +226,8 @@ router.post('/articleList', function(req, res) {
 })
 
 /*
-*   后台管理图片上传功能
-* 
+*   后台管理 核桃图片上传功能
+*   
 */
 router.post('/walnut/imgUpload', function(req, res) {
   const form = new formidable.IncomingForm();
@@ -241,19 +241,22 @@ router.post('/walnut/imgUpload', function(req, res) {
     if(err) {
       throw err;
     }
-    console.log('1==>', fields);
-    console.log('2==>', files.file.name)
     const name = files.file.name;
-    const imgPath = path.basename(files.file.path);
-    console.log(name, imgPath)
-    // const title = fields.title;
-    // const singer = fields.singer;
-    // const music = path.basename(files.music.path);
-    // const img = path.basename(files.img.path);
-    // db.path(`INSERT INTO t_sys_walnuts (title, singer, music, img) VALUES ()`)
-    res.json({
-      code: 0,
-      message: '上传成功'
+    // 图片服务器上的文件名path.basename(files.file.path)  路径 config.uploadDir.admin： ip+prot？
+    const imgPath = `${(config.uploadDir.admin).substring(1)}/${path.basename(files.file.path)}`;
+    db.query(`INSERT INTO t_sys_walnuts (walnut_url, walnut_name, walnut_create_time) VALUES ('${imgPath}', '${name}',  NOW() )`, function(err) {
+      if(err) {
+        console.log(err)
+        res.json({
+          code: 1,
+          message: '服务器繁忙，请稍后再试！'
+        })
+      }else {
+        res.json({
+          code: 0,
+          message: '上传成功'
+        })
+      }
     })
   })
 })

@@ -18,6 +18,10 @@ var uuid = require('node-uuid');
 // 后台数据库连接池
 const db = mysql.createPool(config.database.admin);
 
+router.get('/index', function(req, res) {
+  res.json('欢迎欢迎')
+})
+
 
 /*
 *   前台 获取资讯列表

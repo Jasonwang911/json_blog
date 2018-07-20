@@ -20,7 +20,7 @@ router.post("/wangeditor/upload",function(req,res,next){
             if(err) {
                 res.send({errno:1,data:[]});
             };
-            var mypath = newpath.replace("./public","http://127.0.0.1:3000"); //context.ip是我自己设置的后台的ip名，根据环境，可以是localhost,也可以是电脑ip
+            var mypath = newpath.replace("./public","http://walnuts.wangshen.top"); //context.ip是我自己设置的后台的ip名，根据环境，可以是localhost,也可以是电脑ip
             res.send({errno:0,data:[mypath]}) //返回图片路径，让前端展示
         });
     });

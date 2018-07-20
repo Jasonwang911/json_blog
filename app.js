@@ -21,7 +21,7 @@ var wangEditor = require('./routes/wangEditor')
 var app = express();
 
 var corsOptions = {
-  origin: ['http://localhost:9527', 'http://localhost:8080', 'http://localhost:9528','http://wadmin.wangshen.top'],
+  origin: ['http://localhost:9527', 'http://localhost:8080', 'http://localhost:9528','http://wadmin.wangshen.top', 'http://walnuts.wangshen.top', 'http://www.wangshen.top'],
   // origin: 'http://localhost:8080', //只有 localhost:8080可以访问
   credentials: true
 }
@@ -70,9 +70,9 @@ app.use("/ueditor/ue", ueditor(path.join(__dirname, 'public'), function (req, re
   }
 }));
 
-app.use('/font', indexRouter);
-app.use('/admin', adminRouter);
-app.use("/wangUeditor", wangEditor);
+app.use('/apis/font', indexRouter);
+app.use('/apis/admin', adminRouter);
+app.use("/apis/wangUeditor", wangEditor);
 
 
 // catch 404 and forward to error handler

@@ -67,7 +67,7 @@ router.post('/article', function(req, res) {
       message: 'id不能为空！'
     })
   }
-  db.query(`SELECT * FROM t_sys_articlelist LEFT JOIN t_sys_articles ON t_sys_articlelist.artlist_id=t_sys_articles.articles_id WHERE artlist_id='${id}'`, function(err, data) {
+  db.query(`SELECT artlist_id, artlist_title, artlist_author, artlist_recommend, articles_content, articles_update_time FROM t_sys_articlelist AS a LEFT JOIN t_sys_articles AS b ON a.artlist_uuid=b.artlist_uuid WHERE artlist_id='${id}'`, function(err, data) {
     if(err) {
       console.log(err);
       res.json({

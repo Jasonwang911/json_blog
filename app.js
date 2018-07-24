@@ -21,7 +21,17 @@ var wangEditor = require('./routes/wangEditor')
 var app = express();
 
 var corsOptions = {
-  origin: ['http://localhost:9527', 'http://localhost:8080', 'http://localhost:9528','http://wadmin.wangshen.top', 'http://walnuts.wangshen.top', 'http://www.wangshen.top'],
+  origin: [
+    'http://localhost:9527', 
+    'http://localhost:8080', 
+    'http://localhost:9528',
+    'http://wadmin.wangshen.top', 
+    'http://walnuts.wangshen.top', 
+    'http://www.wangshen.top',
+    'https://wadmin.wangshen.top', 
+    'https://walnuts.wangshen.top', 
+    'https://www.wangshen.top'
+  ],
   // origin: 'http://localhost:8080', //只有 localhost:8080可以访问
   credentials: true
 }

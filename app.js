@@ -40,6 +40,9 @@ app.use(cookieParser());
 // app.use(multerObj.any());
 app.use(express.static(path.join(__dirname, 'public')));
 
+// 托管swagger，并静态化swagger文件目录
+app.use("/apis/swagger", express.static(path.join(__dirname, 'public/swagger')));
+
 // 配置 ueditor 
 app.use("/ueditor/ue", ueditor(path.join(__dirname, 'public'), function (req, res, next) {
   //客户端上传文件设置

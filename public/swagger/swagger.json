@@ -1,0 +1,54 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "description": "包含m站和后台管理api接口",
+    "version": "0.0.1",
+    "title": "核桃配对项目api文档"
+  },
+  "host": "walnuts.wangshen.top",
+  "basePath": "/apis",
+  "schemes": [
+    "https",
+    "http"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "paths": {
+    "/font/articleList": {
+      "post": {
+        "tags": [
+          "资讯列表"
+        ],
+        "summary": "查询资讯列表",
+        "description": "查询资讯列表",
+        "operationId": "查询资讯列表",
+        "consumes": [
+          "application/json",
+          "application/xml"
+        ],
+        "responses": {
+          "405": {
+            "description": "服务器繁忙，请稍后再试！"
+          }
+        }
+      }
+    }
+  },
+  "securityDefinitions": {
+    "petstore_auth": {
+      "type": "oauth2",
+      "authorizationUrl": "http://petstore.swagger.io/oauth/dialog",
+      "flow": "implicit",
+      "scopes": {
+        "write:pets": "modify pets in your account",
+        "read:pets": "read your pets"
+      }
+    },
+    "api_key": {
+      "type": "apiKey",
+      "name": "api_key",
+      "in": "header"
+    }
+  }
+}
